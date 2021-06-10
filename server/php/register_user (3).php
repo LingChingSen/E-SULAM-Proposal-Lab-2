@@ -10,11 +10,15 @@ include_once("dbconnect.php");
 
 $username = $_POST['username'];
 $user_email = $_POST['email'];
+$phonenum = $_POST['phonenum'];
 $password = $_POST['password'];
 $passha1 = sha1($password);
 $otp = rand(1000,9999);
+$rating = "0";
+$credit = "0";
+$status = "active";
 
-$sqlregister = "INSERT INTO tbl_user(username,user_email,password,otp) VALUES('$username','$user_email','$passha1','$otp')";
+$sqlregister = "INSERT INTO tbl_user(username,user_email,phonenum,password,otp,rating,credit,status) VALUES('$username','$user_email','$phonenum','$passha1','$otp','$rating','$credit','$status')";
 if($conn->query($sqlregister) === TRUE){
     sendEmail($otp,$user_email);
     echo "success";

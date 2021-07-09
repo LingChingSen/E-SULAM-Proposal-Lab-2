@@ -17,7 +17,7 @@ class _MapPageState extends State<MapPage> {
   double dis = 0;
   Set<Marker> markers = Set();
   String _address = "No location selected";
-   Delivery _delivery;
+  Delivery _delivery;
 
   Completer<GoogleMapController> _controller = Completer();
   static final CameraPosition _shopPosition = CameraPosition(
@@ -127,7 +127,7 @@ class _MapPageState extends State<MapPage> {
       position: LatLng(6.443364, 100.428612),
       infoWindow: InfoWindow(
         title: 'Shop Location',
-        snippet: "Simple ESHOP Changlun",
+        snippet: "Bun Planet Puchong",
       ),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
     ));

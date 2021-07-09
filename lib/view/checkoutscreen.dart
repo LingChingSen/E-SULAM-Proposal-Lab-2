@@ -1,4 +1,3 @@
-import 'package:bunplanet/view/user.dart';
 import 'package:flutter/material.dart';
 import 'package:date_format/date_format.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,34 +6,36 @@ import 'package:geolocator/geolocator.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bunplanet/view/paymentlist.dart';
+import 'package:bunplanet/view/user.dart';
 import 'package:bunplanet/view/deliveryscreen.dart';
+import 'package:bunplanet/view/payment.dart';
+
 import 'mappage.dart';
 
-class CheckOutScreen extends StatefulWidget {
+class CheckOutPage extends StatefulWidget {
   final User user;
   final double total;
 
-  const CheckOutScreen({Key key, this.user,this.total}) : super(key: key);
+  const CheckOutPage({Key key, this.user, this.total}) : super(key: key);
 
   @override
-  _CheckOutScreenState createState() => _CheckOutScreenState();
+  _CheckOutPageState createState() => _CheckOutPageState();
 }
 
-class _CheckOutScreenState extends State<CheckOutScreen> {
+class _CheckOutPageState extends State<CheckOutPage> {
   int _radioValue = 0;
   String _delivery = "Pickup";
   bool _statusdel = false;
   bool _statuspickup = true;
   String _selectedtime = "09:00 A.M";
   String _curtime = "";
-  String _name = "Click to set";
-  String _phone = "Click to set";
   TextEditingController nameController = new TextEditingController();
   TextEditingController phoneController = new TextEditingController();
   TextEditingController _userlocctrl = new TextEditingController();
   String address = "";
   double screenHeight, screenWidth;
- SharedPreferences prefs;
+  SharedPreferences prefs;
 
   @override
   void initState() {
@@ -43,7 +44,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     _curtime = DateFormat("Hm").format(now);
     int cm = _convMin(_curtime);
     _selectedtime = _minToTime(cm);
-    _loadPref();
   }
 
   @override
@@ -69,7 +69,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     width: screenWidth,
                     color: Colors.red,
                     child: Image.asset(
-                      'assets/images/bunplanet.png',
+                      'assets/images/checkout.jpg',
                       fit: BoxFit.fitWidth,
                     ),
                   ),
@@ -137,10 +137,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                             Container(
                                 height: 20,
                                 child: VerticalDivider(color: Colors.grey)),
-                            Expanded(
-                              flex: 7,
-                              child: Text(widget.user.name),
-                            )
+                            Expanded(flex: 7, child: Text(widget.user.name)),
                           ],
                         ),
                         Row(
@@ -150,9 +147,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 height: 20,
                                 child: VerticalDivider(color: Colors.grey)),
                             Expanded(
-                             flex: 7,
-                              child: Text(widget.user.phonenum),
-                            )
+                                flex: 7, child: Text(widget.user.phonenum)),
                           ],
                         ),
                       ],
@@ -294,10 +289,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                             border: OutlineInputBorder(),
                                             hintText: 'Search/Enter address'),
                                         keyboardType: TextInputType.multiline,
-                                        minLines:
-                                            4, 
-                                        maxLines:
-                                            4,
+                                        minLines: 4,
+                                        maxLines: 4,
                                       ),
                                     ],
                                   )),
@@ -310,10 +303,21 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     children: [
                                       Container(
                                         width: 150,
-                                        child: ElevatedButton(
+                                        child: MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          minWidth: 50,
+                                          height: 35,
+                                          child: Text('Location',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                          color: Colors.yellow[600],
                                           onPressed: () =>
                                               {_getUserCurrentLoc()},
-                                          child: Text("Location"),
                                         ),
                                       ),
                                       Divider(
@@ -322,10 +326,22 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       ),
                                       Container(
                                         width: 150,
-                                        child: ElevatedButton(
+                                        child: MaterialButton(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5)),
+                                          minWidth: 50,
+                                          height: 35,
+                                          child: Text('Map',
+                                              style: TextStyle(
+                                                  color: Colors.black,
+                                                  fontSize: 16,
+                                                  fontWeight:
+                                                      FontWeight.normal)),
+                                          color: Colors.yellow[600],
                                           onPressed: () async {
-                                            Delivery _del = 
-                                            await Navigator.of(context)
+                                            Delivery _del =
+                                                await Navigator.of(context)
                                                     .push(
                                               MaterialPageRoute(
                                                 builder: (context) => MapPage(),
@@ -334,11 +350,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                             print(address);
                                             setState(() {
                                               _userlocctrl.text = _del.address;
-                                              
-
                                             });
                                           },
-                                          child: Text("Map"),
                                         ),
                                       ),
                                     ],
@@ -370,12 +383,22 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           fontWeight: FontWeight.bold,
                           color: Colors.red),
                     ),
-                    
                     Container(
-                      width: screenWidth/2.5,
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text("PAY NOW"),
+                      width: screenWidth / 2.5,
+                      child: MaterialButton(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5)),
+                        minWidth: 50,
+                        height: 35,
+                        child: Text('PAY NOW',
+                            style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal)),
+                        color: Colors.yellow[600],
+                        onPressed: () {
+                          _paynowDialog();
+                        },
                       ),
                     )
                   ],
@@ -402,6 +425,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
           _delivery = "Delivery";
           _statusdel = true;
           _statuspickup = false;
+          _selectedtime = "";
           break;
       }
       print(_delivery);
@@ -477,48 +501,6 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     return DateFormat.jm().format(DateFormat("hh:mm").parse(tm));
   }
 
-  void nameDialog() {
-    showDialog(
-        builder: (context) => new AlertDialog(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                title: new Text(
-                  'Your Name?',
-                  style: TextStyle(
-                    color: Colors.black,
-                  ),
-                ),
-                actions: <Widget>[
-                  TextField(
-                    controller: nameController,
-                    style: TextStyle(fontSize: 12),
-                    decoration: InputDecoration(
-                        border: OutlineInputBorder(), hintText: 'Enter Name'),
-                    keyboardType: TextInputType.name,
-                  ),
-                  TextButton(
-                    child: Text("Ok"),
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      _name = nameController.text;
-                      prefs = await SharedPreferences.getInstance();
-                      await prefs.setString("name", _name);
-                      setState(() {});
-                    },
-                  ),
-                ]),
-        context: context);
-  }
-
-  
-
-  Future<void> _loadPref() async {
-    prefs = await SharedPreferences.getInstance();
-    _name = prefs.getString("name") ?? 'Click to set';
-    _phone = prefs.getString("phone") ?? 'Click to set';
-    setState(() {});
-  }
-
   _getUserCurrentLoc() async {
     ProgressDialog progressDialog = ProgressDialog(context,
         message: Text("Searching address"), title: Text("Locating..."));
@@ -578,5 +560,48 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
     }
 
     return await Geolocator.getCurrentPosition();
+  }
+
+  void _paynowDialog() {
+    final now = new DateTime.now();
+    String _date = DateFormat('yMd').format(now);
+    Payment payment = new Payment(
+      useraddress: _userlocctrl.text,
+      date: _date,
+      time: _selectedtime,
+    );
+    showDialog(
+        builder: (context) => new AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                title: new Text(
+                  'Pay RM ' + widget.total.toStringAsFixed(2) + "?",
+                  style: TextStyle(
+                    color: Colors.white,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text("Yes",
+                        style: TextStyle(color: Colors.yellow[600])),
+                    onPressed: () async {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => PaymentScreen(
+                              user: widget.user,
+                              total: widget.total,
+                              payment: payment),
+                        ),
+                      );
+                    },
+                  ),
+                  TextButton(
+                      child: Text("No",
+                          style: TextStyle(color: Colors.yellow[600])),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                ]),
+        context: context);
   }
 }

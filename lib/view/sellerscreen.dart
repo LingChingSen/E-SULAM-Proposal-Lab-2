@@ -1,36 +1,36 @@
 import 'dart:convert';
 import 'package:bunplanet/view/cart.dart';
+import 'package:bunplanet/view/seller.dart';
 import 'package:http/http.dart' as http;
+import 'newproduct.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'cart.dart';
 import 'package:bunplanet/view/user.dart';
-import 'package:bunplanet/view/seller.dart';
-import 'package:bunplanet/view/mydrawer.dart';
+import 'package:bunplanet/view/sellerdrawer.dart';
 
-class MainScreen extends StatefulWidget {
-  final User user;
+class SellerScreen extends StatefulWidget {
   final Seller seller;
-  const MainScreen({Key key, this.user, this.seller}) : super(key: key);
+  final User user;
+ const SellerScreen({Key key, this.seller, this. user}) : super(key: key);
 
   @override
-  _MainScreenState createState() => _MainScreenState();
+  _SellerScreenState createState() => _SellerScreenState();
 }
 
-class _MainScreenState extends State<MainScreen> {
+class _SellerScreenState extends State<SellerScreen> {
   List _productList = [];
-  String _titlecenter = "Loading...";
   double screenHeight, screenWidth;
   final df = new DateFormat('dd-MM-yyyy');
   TextEditingController _srcController = new TextEditingController();
-  int cartitem = 2;
+  int cartitem = 0;
 
   @override
   void initState() {
     super.initState();
     _testasync();
-    _loadCart();
+    
   }
 
   @override
@@ -41,20 +41,9 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Bun Planet"),
-        actions: [
-          TextButton.icon(
-              onPressed: () => {_goToCart()},
-              icon: Icon(
-                Icons.shopping_cart,
-                color: Colors.white,
-              ),
-              label: Text(
-                cartitem.toString(),
-                style: TextStyle(color: Colors.white),
-              )),
-        ],
+        
       ),
-      drawer: MyDrawer(user: widget.user),
+      drawer: MySellerDrawer(seller: widget.seller,user:widget.user),
       body: Center(
         child: Column(children: [
           Column(children: [
@@ -146,13 +135,12 @@ class _MainScreenState extends State<MainScreen> {
                                                               .fromLTRB(
                                                           15, 15, 5, 0),
                                                       child: Text(
-                                                          "Price: RM " +
-                                                              _productList[
-                                                                      index]
-                                                                  ['price'],
-                                                          style: TextStyle(
-                                                              color:
-                                                                  Colors.red)),
+                                                        "Price: RM " +
+                                                            _productList[index]
+                                                                ['price'],
+                                                        style: TextStyle(
+                              color: Colors.red[600])
+                                                      ),
                                                     ),
                                                     Padding(
                                                       padding: const EdgeInsets
@@ -171,12 +159,12 @@ class _MainScreenState extends State<MainScreen> {
                                                               .fromLTRB(
                                                           15, 15, 5, 0),
                                                       child: Text(
-                                                          "Type of Bun: " +
-                                                              _productList[
-                                                                  index]['qty'],
-                                                          style: TextStyle(
-                                                              color: Colors
-                                                                  .green[600])),
+                                                        "Type of Bun: " +
+                                                            _productList[index]
+                                                                ['qty'],
+                                                        style: TextStyle(
+                              color: Colors.green[600])
+                                                      ),
                                                     ),
                                                   ])
                                             ],
@@ -188,9 +176,9 @@ class _MainScreenState extends State<MainScreen> {
                                               EdgeInsets.fromLTRB(0, 0, 10, 0),
                                           alignment: Alignment.centerRight,
                                           child: IconButton(
-                                            icon: Icon(Icons.add_shopping_cart),
+                                            icon: Icon(Icons.delete_forever_rounded),
                                             onPressed: () =>
-                                                {_addtocart(index)},
+                                                { _deletePostDialog(index)},
                                           ),
                                         ),
                                       )
@@ -203,6 +191,13 @@ class _MainScreenState extends State<MainScreen> {
                         ));
                   })),
         ]),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => AddNewProduct(user:widget.user)));
+        },
+        child: Icon(Icons.add),
       ),
     );
   }
@@ -226,7 +221,7 @@ class _MainScreenState extends State<MainScreen> {
         var jsondata = json.decode(response.body);
         print(jsondata);
         _productList = jsondata["products"];
-        _titlecenter = "";
+       
       }
       setState(() {});
     });
@@ -236,51 +231,79 @@ class _MainScreenState extends State<MainScreen> {
     _loadProducts("");
   }
 
-  void _addtocart(int index) {
+  void _deletePost(int index) {
     String prid = _productList[index]['id'];
     http.post(
         Uri.parse(
-            "https://crimsonwebs.com/s271738/bunplanet/php/insertcart.php"),
-        body: {"email": widget.user.email, "prid": prid}).then((response) {
+            "https://crimsonwebs.com/s271738/bunplanet/php/sellerdelete.php"),
+        body: {
+         
+          "prid": prid
+        }).then((response) {
       print(response.body);
-      if (response.body == "failed") {
+      if (response.body == "success") {
         Fluttertoast.showToast(
-            msg: "Failed added to cart",
+            msg: "Success",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SellerScreen(
+                      
+                    )));
+        return;
       } else {
         Fluttertoast.showToast(
-            msg: "Successfully added to cart",
+            msg: "Failed",
             toastLength: Toast.LENGTH_SHORT,
             gravity: ToastGravity.CENTER,
             timeInSecForIosWeb: 1,
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        _loadCart();
       }
     });
   }
 
-  _goToCart() {
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => CartPage(user: widget.user)));
-    _loadProducts("");
+   void _deletePostDialog(int index) {
+    showDialog(
+        builder: (context) => new AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                title: new Text(
+                  'Delete this product ?',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text("Yes", style: TextStyle(
+                              color: Colors.yellow[600])),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _deletePost(index);
+                    },
+                  ),
+                  TextButton(
+                      child: Text("No", style: TextStyle(
+                              color: Colors.yellow[600])),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                ]),
+        context: context);
   }
 
-  void _loadCart() {
-    print(widget.user.email);
-    http.post(
-        Uri.parse("https://crimsonwebs.com/s271738/bunplanet/php/usercart.php"),
-        body: {"email": widget.user.email}).then((response) {
-      setState(() {
-        cartitem = int.parse(response.body);
-        print(cartitem);
-      });
-    });
-  }
+
+ 
+
+
+
+ 
 }

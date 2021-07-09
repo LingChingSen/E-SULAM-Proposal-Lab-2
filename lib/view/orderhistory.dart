@@ -4,27 +4,30 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:bunplanet/view/user.dart';
-import 'package:bunplanet/view/checkoutscreen.dart';
-import 'package:bunplanet/view/mainscreen.dart';
+import 'package:bunplanet/view/sellerscreen.dart';
+import 'package:bunplanet/view/seller.dart';
+import 'package:intl/intl.dart';
 
-class CartPage extends StatefulWidget {
+class History2Screen extends StatefulWidget {
   final User user;
+  final Seller seller;
 
-  const CartPage({Key key, this.user}) : super(key: key);
+  const History2Screen({Key key, this.user, this.seller, double total})
+      : super(key: key);
 
   @override
-  _CartPageState createState() => _CartPageState();
+  _History2ScreenState createState() => _History2ScreenState();
 }
 
-class _CartPageState extends State<CartPage> {
-  String _titlecenter = "Loading your cart";
+class _History2ScreenState extends State<History2Screen> {
+  String _titlecenter = "Opps! No Order History.";
   List _cartList;
   double _totalprice = 0.0;
-
+  final now = new DateTime.now();
   @override
   void initState() {
     super.initState();
-    _loadMyCart();
+    _loadMyHistory();
   }
 
   @override
@@ -37,12 +40,13 @@ class _CartPageState extends State<CartPage> {
             Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => MainScreen(
+                    builder: (context) => SellerScreen(
+                          seller: widget.seller,
                           user: widget.user,
                         )));
           },
         ),
-        title: Text('Your Cart'),
+        title: Text('Order History'),
       ),
       body: Center(
         child: Column(
@@ -54,7 +58,7 @@ class _CartPageState extends State<CartPage> {
                   child: OrientationBuilder(builder: (context, orientation) {
                 return GridView.count(
                     crossAxisCount: 1,
-                    childAspectRatio: 3 / 1,
+                    childAspectRatio: 5 / 2,
                     children: List.generate(_cartList.length, (index) {
                       return Padding(
                           padding: EdgeInsets.all(1),
@@ -111,32 +115,41 @@ class _CartPageState extends State<CartPage> {
                                                       _cartList[index]
                                                           ['productName'],
                                                       style: TextStyle(
+                                                          color:
+                                                              Colors.blue[600],
                                                           fontSize: 16,
                                                           fontWeight:
                                                               FontWeight.bold)),
+                                                  SizedBox(height: 5),
                                                   Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
-                                                      IconButton(
-                                                        icon:
-                                                            Icon(Icons.remove),
-                                                        onPressed: () {
-                                                          _modQty(index,
-                                                              "removecart");
-                                                        },
-                                                      ),
-                                                      Text(_cartList[index]
-                                                          ['cartqty']),
-                                                      IconButton(
-                                                        icon: Icon(Icons.add),
-                                                        onPressed: () {
-                                                          _modQty(
-                                                              index, "addcart");
-                                                        },
-                                                      ),
+                                                      Text(
+                                                          "Quantity : " +
+                                                              _cartList[index]
+                                                                  ['cartqty'],
+                                                          style: TextStyle(
+                                                              color:
+                                                                  Colors.white,
+                                                              fontSize: 15,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold)),
                                                     ],
                                                   ),
+                                                  SizedBox(height: 5),
+                                                  Text(
+                                                      "Date Order: " +
+                                                          _cartList[index]
+                                                              ['dateorder'],
+                                                      style: TextStyle(
+                                                          color:
+                                                              Colors.green[600],
+                                                          fontSize: 15,
+                                                          fontWeight:
+                                                              FontWeight.bold)),
+                                                  SizedBox(height: 5),
                                                   Text(
                                                     "RM " +
                                                         (int.parse(_cartList[
@@ -158,19 +171,6 @@ class _CartPageState extends State<CartPage> {
                                               ),
                                             ),
                                           ),
-                                          Expanded(
-                                            flex: 1,
-                                            child: Column(
-                                              children: [
-                                                IconButton(
-                                                  icon: Icon(Icons.delete),
-                                                  onPressed: () {
-                                                    _deleteCartDialog(index);
-                                                  },
-                                                )
-                                              ],
-                                            ),
-                                          )
                                         ],
                                       )))));
                     }));
@@ -197,14 +197,14 @@ class _CartPageState extends State<CartPage> {
                           borderRadius: BorderRadius.circular(5)),
                       minWidth: 50,
                       height: 35,
-                      child: Text('CHECKOUT',
+                      child: Text('Save Sales',
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,
                               fontWeight: FontWeight.normal)),
                       color: Colors.yellow[600],
                       onPressed: () {
-                        _payDialog();
+                        _savesalesDialog();
                       },
                     ),
                   ],
@@ -215,11 +215,11 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  _loadMyCart() {
+  _loadMyHistory() {
     http.post(
         Uri.parse(
-            "https://crimsonwebs.com/s271738/bunplanet/php/loadusercart.php"),
-        body: {"email": widget.user.email}).then((response) {
+            "https://crimsonwebs.com/s271738/bunplanet/php/loadorderhistory.php"),
+        body: {"email": widget.seller.email}).then((response) {
       print(response.body);
       if (response.body == "nodata") {
         _titlecenter = "No item";
@@ -242,80 +242,13 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
-  void _modQty(int index, String s) {
-    http.post(
-        Uri.parse(
-            "https://crimsonwebs.com/s271738/bunplanet/php/updateusercart.php"),
-        body: {
-          "email": widget.user.email,
-          "op": s,
-          "prid": _cartList[index]['productId'],
-          "qty": _cartList[index]['cartqty']
-        }).then((response) {
-      print(response.body);
-      if (response.body == "success") {
-        Fluttertoast.showToast(
-            msg: "Success",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-        _loadMyCart();
-      } else {
-        Fluttertoast.showToast(
-            msg: "Failed",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    });
-  }
-
-  void _deleteCart(int index) {
-    http.post(
-        Uri.parse(
-            "https://crimsonwebs.com/s271738/bunplanet/php/deleteusercart.php"),
-        body: {
-          "email": widget.user.email,
-          "prid": _cartList[index]['productId']
-        }).then((response) {
-      print(response.body);
-      if (response.body == "success") {
-        Fluttertoast.showToast(
-            msg: "Success",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-        _loadMyCart();
-        return;
-      } else {
-        Fluttertoast.showToast(
-            msg: "Failed",
-            toastLength: Toast.LENGTH_SHORT,
-            gravity: ToastGravity.CENTER,
-            timeInSecForIosWeb: 1,
-            backgroundColor: Colors.red,
-            textColor: Colors.white,
-            fontSize: 16.0);
-      }
-    });
-  }
-
-  void _deleteCartDialog(int index) {
+  _savesalesDialog() {
     showDialog(
         builder: (context) => new AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
                 title: new Text(
-                  'Delete from your cart?',
+                  'Are you sure to save this sales? You can only save once for per day.Please save after operating hours',
                   style: TextStyle(
                     color: Colors.black,
                   ),
@@ -326,7 +259,7 @@ class _CartPageState extends State<CartPage> {
                         style: TextStyle(color: Colors.yellow[600])),
                     onPressed: () {
                       Navigator.of(context).pop();
-                      _deleteCart(index);
+                      _savesales();
                     },
                   ),
                   TextButton(
@@ -339,54 +272,53 @@ class _CartPageState extends State<CartPage> {
         context: context);
   }
 
-  void _payDialog() {
-    if (_totalprice == 0.0) {
-      Fluttertoast.showToast(
-          msg: "Amount not payable",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0);
-      return;
-    } else {
-      showDialog(
-          builder: (context) => new AlertDialog(
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                  title: new Text(
-                    'Proceed with checkout?',
-                    style: TextStyle(
-                      color: Colors.white,
+  void _savesales() {
+    String _date = DateFormat('dd/MM/yyyy').format(now);
+    double total = _totalprice;
+    String total2 = total.toString();
+    http.post(
+        Uri.parse("https://crimsonwebs.com/s271738/bunplanet/php/sales.php"),
+        body: {
+          "date": _date,
+          "sales": total2,
+        }).then((response) {
+      print(response.body);
+      if (response.body == "success") {
+        Fluttertoast.showToast(
+            msg: "Success",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    History2Screen(user: widget.user, seller: widget.seller)));
+        return;
+      } else {
+        showDialog(
+            builder: (context) => new AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                    title: new Text(
+                      'You are not able to save any sales for today, please save it tomorrow',
+                      style: TextStyle(
+                        color: Colors.black,
+                      ),
                     ),
-                  ),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text("Yes",
-                          style: TextStyle(
-                            color: Colors.yellow[600],
-                          )),
-                      onPressed: () async {
-                        Navigator.of(context).pop();
-                        await Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => CheckOutPage(
-                                user: widget.user, total: _totalprice),
-                          ),
-                        );
-                      },
-                    ),
-                    TextButton(
-                        child: Text("No",
-                            style: TextStyle(
-                              color: Colors.yellow[600],
-                            )),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        }),
-                  ]),
-          context: context);
-    }
+                    actions: <Widget>[
+                      TextButton(
+                          child: Text("ok",
+                              style: TextStyle(color: Colors.yellow[600])),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          }),
+                    ]),
+            context: context);
+      }
+    });
   }
 }

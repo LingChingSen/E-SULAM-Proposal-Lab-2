@@ -63,7 +63,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     decoration: InputDecoration(
                         labelText: 'Username', icon: Icon(Icons.person)),
                   ),
-                   TextField(
+                  TextField(
                     controller: _phonenumController,
                     decoration: InputDecoration(
                         labelText: 'Phone Number', icon: Icon(Icons.phone)),
@@ -156,13 +156,12 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     String _email = _emailController.text.toString();
     String _passworda = _passwordControllera.text.toString();
     String _passwordb = _passwordControllerb.text.toString();
-     String _phonenum = _phonenumController.text.toString();
+    String _phonenum = _phonenumController.text.toString();
     if (_username.isEmpty ||
         _email.isEmpty ||
         _passworda.isEmpty ||
         _passwordb.isEmpty ||
-        _phonenum.isEmpty
-        ) {
+        _phonenum.isEmpty) {
       Fluttertoast.showToast(
         msg: "Could't left user name, phone number, email or password empty! ",
         toastLength: Toast.LENGTH_LONG,
@@ -238,7 +237,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 child: Text("Ok"),
                 onPressed: () {
                   Navigator.of(context).pop();
-                  _registerUser(_username, _email, _passworda,_phonenum);
+                  _registerUser(_username, _email, _passworda, _phonenum);
                 },
               ),
               TextButton(
@@ -252,7 +251,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   }
 
   Future<void> _registerUser(
-      String username, String email, String password,String phonenum) async {
+      String username, String email, String password, String phonenum) async {
     pr = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
     await pr.show();
@@ -261,7 +260,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             "https://crimsonwebs.com/s271738/bunplanet/php/register_user.php"),
         body: {
           "username": username,
-          "phonenum" : phonenum,
+          "phonenum": phonenum,
           "email": email,
           "password": password
         }).then((response) {

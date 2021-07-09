@@ -25,15 +25,11 @@ class _SplashScreenState extends State<SplashScreen> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-                margin: EdgeInsets.fromLTRB(100,50,100,10),
+                margin: EdgeInsets.fromLTRB(100, 50, 100, 10),
                 child: Image.asset('assets/images/bunplanet.png')),
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                 Text("Welcome to Bun Planet",style: TextStyle(fontSize:20)),
-                  ]
-                )
-            
+            Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              Text("Welcome to Bun Planet", style: TextStyle(fontSize: 20)),
+            ])
           ],
         ),
       ),

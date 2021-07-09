@@ -1,12 +1,12 @@
 import 'dart:convert';
-import 'package:bunplanet/view/cart.dart';
+
 import 'package:bunplanet/view/seller.dart';
 import 'package:http/http.dart' as http;
 import 'newproduct.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'cart.dart';
+
 import 'package:bunplanet/view/user.dart';
 import 'package:bunplanet/view/sellerdrawer.dart';
 
@@ -250,12 +250,11 @@ class _SellerScreenState extends State<SellerScreen> {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        Navigator.pushReplacement(
+       Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => SellerScreen(
-                      
-                    )));
+                builder: (content) =>
+                    SellerScreen(seller: widget.seller, user: widget.user)));
         return;
       } else {
         Fluttertoast.showToast(
@@ -286,7 +285,7 @@ class _SellerScreenState extends State<SellerScreen> {
                     child: Text("Yes", style: TextStyle(
                               color: Colors.yellow[600])),
                     onPressed: () {
-                      Navigator.of(context).pop();
+                      
                       _deletePost(index);
                     },
                   ),

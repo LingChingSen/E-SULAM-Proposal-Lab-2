@@ -294,7 +294,8 @@ class _CartPageState extends State<CartPage> {
             backgroundColor: Colors.red,
             textColor: Colors.white,
             fontSize: 16.0);
-        _loadMyCart();
+        Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => CartPage(user: widget.user)));
         return;
       } else {
         Fluttertoast.showToast(

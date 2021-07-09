@@ -13,7 +13,7 @@ import 'package:image_cropper/image_cropper.dart';
 class AddNewProduct extends StatefulWidget {
   final Seller seller;
   final User user;
-  const AddNewProduct({Key key, this.seller, this.user}) : super(key: key);
+  const AddNewProduct({Key key, this.seller,this.user}) : super(key: key);
   @override
   _AddNewProductState createState() => _AddNewProductState();
 }
@@ -29,7 +29,7 @@ class _AddNewProductState extends State<AddNewProduct> {
   TextEditingController _qtyController = new TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+   Widget build(BuildContext context) {
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
 
@@ -60,12 +60,15 @@ class _AddNewProductState extends State<AddNewProduct> {
                             width: 3.0,
                             color: Colors.grey,
                           ),
-                          borderRadius: BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius: BorderRadius.all(Radius.circular(
+                                  10.0) 
+                              ),
                         )),
                   ),
                   SizedBox(height: 5),
                   Text("Click to add product image",
                       style: TextStyle(fontSize: 10.0, color: Colors.white)),
+            
                   TextField(
                     controller: _nameController,
                     keyboardType: TextInputType.name,
@@ -87,20 +90,20 @@ class _AddNewProductState extends State<AddNewProduct> {
                   ),
                   SizedBox(height: 15),
                   MaterialButton(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    minWidth: screenWidth,
-                    height: 50,
-                    child: Text('Add New Product',
-                        style: TextStyle(
-                          color: Colors.black,
-                        )),
-                    onPressed: () {
-                      postNewProductDialog();
-                    },
-                    color: Colors.yellow[600],
-                  ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      minWidth: screenWidth,
+                      height: 50,
+                      child: Text('Add New Product',
+                          style: TextStyle(
+                            color: Colors.black,
+                          )),
+                          
+                      onPressed: () {
+                        postNewProductDialog();
+                      },
+                      color: Colors.yellow[600],),
                   SizedBox(height: 10),
                 ],
               ))),
@@ -114,9 +117,11 @@ class _AddNewProductState extends State<AddNewProduct> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
+            
             shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(10.0))),
             content: new Container(
+             
               height: screenHeight / 4,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -146,6 +151,7 @@ class _AddNewProductState extends State<AddNewProduct> {
                             style: TextStyle(
                               color: Colors.black,
                             )),
+                       
                         color: Theme.of(context).accentColor,
                         elevation: 10,
                         onPressed: () =>
@@ -162,6 +168,7 @@ class _AddNewProductState extends State<AddNewProduct> {
                             style: TextStyle(
                               color: Colors.black,
                             )),
+                       
                         color: Theme.of(context).accentColor,
                         elevation: 10,
                         onPressed: () =>
@@ -233,59 +240,62 @@ class _AddNewProductState extends State<AddNewProduct> {
   }
 
   void postNewProductDialog() {
-    String _name = _nameController.text.toString();
+   String _name = _nameController.text.toString();
     String _type = _typeController.text.toString();
     String _price = _priceController.text.toString();
+    
 
-    if (_name.isEmpty && _type.isEmpty && _price.isEmpty) {
+    if(_name.isEmpty && _type.isEmpty && _price.isEmpty  ){
       Fluttertoast.showToast(
-          msg: "Please fill in all textfield",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blue,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "Please fill in all textfield",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        fontSize: 16.0);
       return;
-    } else if (_name.isEmpty) {
+    }
+    else if(_name.isEmpty ){
       Fluttertoast.showToast(
-          msg: "Name is empty",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blue,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "Name is empty",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        fontSize: 16.0);
       return;
-    } else if (_type.isEmpty) {
+    }else if(_type.isEmpty ){
       Fluttertoast.showToast(
-          msg: "Type is empty",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blue,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "Type is empty",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        fontSize: 16.0);
       return;
-    } else if (_price.isEmpty) {
+    }else if(_price.isEmpty){
       Fluttertoast.showToast(
-          msg: "Price is empty",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blue,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "Price is empty",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        fontSize: 16.0);
       return;
-    } else if (_image == null) {
+   
+    }else if(_image == null){
       Fluttertoast.showToast(
-          msg: "Please insert image",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Colors.blue,
-          textColor: Colors.white,
-          fontSize: 16.0);
+        msg: "Please insert image",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.blue,
+        textColor: Colors.white,
+        fontSize: 16.0);
       return;
     }
     showDialog(
@@ -298,20 +308,18 @@ class _AddNewProductState extends State<AddNewProduct> {
             content: Text("Are your sure?"),
             actions: [
               TextButton(
-                child: Text("Ok",
-                    style: TextStyle(
-                      color: Colors.yellow[600],
-                    )),
+                child: Text("Ok",style: TextStyle(
+                            color: Colors.yellow[600],
+                          )),
                 onPressed: () {
                   Navigator.of(context).pop();
                   _addNewProduct();
                 },
               ),
               TextButton(
-                  child: Text("Cancel",
-                      style: TextStyle(
-                        color: Colors.yellow[600],
-                      )),
+                  child: Text("Cancel",style: TextStyle(
+                            color: Colors.yellow[600],
+                          )),
                   onPressed: () {
                     Navigator.of(context).pop();
                   }),
@@ -320,6 +328,7 @@ class _AddNewProductState extends State<AddNewProduct> {
         });
   }
 
+  
   Future<void> _addNewProduct() async {
     pr = ProgressDialog(context);
     pr.style(
@@ -332,25 +341,24 @@ class _AddNewProductState extends State<AddNewProduct> {
     );
     pr = ProgressDialog(context,
         type: ProgressDialogType.Normal, isDismissible: true, showLogs: true);
-    await pr.show();
-    String base64Image = base64Encode(_image.readAsBytesSync());
-    String name = _nameController.text.toString();
-    String type = _typeController.text.toString();
-    String price = _priceController.text.toString();
-    String qty = _qtyController.text.toString();
-    print(name);
-    http.post(
-        Uri.parse(
-            "https://crimsonwebs.com/s271738/bunplanet/php/newproduct.php"),
-        body: {
-          "name": name,
-          "type": type,
-          "price": price,
-          "qty": qty,
-          "encoded_string": base64Image
+        await pr.show();
+        String base64Image = base64Encode(_image.readAsBytesSync());
+        String name = _nameController.text.toString();
+        String type = _typeController.text.toString();
+        String price = _priceController.text.toString();
+        String qty = _qtyController.text.toString();
+        print(name);
+        http.post(
+          Uri.parse("https://crimsonwebs.com/s271738/bunplanet/php/newproduct.php"),
+          body: {
+            "name": name,
+            "type": type,
+            "price": price,
+            "qty": qty,
+            "encoded_string": base64Image
         }).then((response) {
-      pr.hide().then((isHidden) {
-        print(isHidden);
+            pr.hide().then((isHidden) {
+            print(isHidden);
       });
       print(response.body);
       if (response.body == "success") {
@@ -369,11 +377,9 @@ class _AddNewProductState extends State<AddNewProduct> {
           _priceController.text = "";
           _qtyController.text = "";
         });
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (content) =>
-                    SellerScreen(seller: widget.seller, user: widget.user)));
+         Navigator.push(
+        context, MaterialPageRoute(builder: (content) =>SellerScreen(seller: widget.seller,user:widget.user)));
+      
       } else {
         Fluttertoast.showToast(
             msg: "Failed",

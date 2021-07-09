@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:bunplanet/view/user.dart';
 import 'package:bunplanet/view/seller.dart';
@@ -12,7 +11,6 @@ import 'package:bunplanet/view/orderdetails.dart';
 class MySellerDrawer extends StatefulWidget {
   final Seller seller;
   final User user;
-  
 
   const MySellerDrawer({Key key, this.seller, this.user}) : super(key: key);
   @override
@@ -26,7 +24,7 @@ class _MySellerDrawerState extends State<MySellerDrawer> {
         child: ListView(
       children: [
         UserAccountsDrawerHeader(
-           accountEmail: Text(widget.seller.email),
+         
           currentAccountPicture: CircleAvatar(
             backgroundColor:
                 Theme.of(context).platform == TargetPlatform.android
@@ -36,37 +34,47 @@ class _MySellerDrawerState extends State<MySellerDrawer> {
               "assets/images/seller.jpg",
             ),
           ),
-           accountName: Text('Seller'),
+          accountName: Text('Seller'),
         ),
-        
-        
-            ListTile(
+        ListTile(
             title: Text("Delivery Order"),
             trailing: Icon(Icons.departure_board_rounded),
             onTap: () {
-               Navigator.push(context,
-            MaterialPageRoute(builder: (content) => OrderScreen(seller:widget.seller,user:widget.user)));
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (content) => OrderScreen(
+                          seller: widget.seller, user: widget.user)));
             }),
-            ListTile(
+        ListTile(
             title: Text("Pickup Order"),
             trailing: Icon(Icons.directions_walk_rounded),
             onTap: () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => Order2Screen(seller:widget.seller,user:widget.user)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Order2Screen(
+                          seller: widget.seller, user: widget.user)));
             }),
-              ListTile(
+        ListTile(
             title: Text("Order History"),
             trailing: Icon(Icons.history),
             onTap: () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => History2Screen(seller:widget.seller,user:widget.user)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => History2Screen(
+                          seller: widget.seller, user: widget.user)));
             }),
-            ListTile(
+        ListTile(
             title: Text("Sales"),
             trailing: Icon(Icons.attach_money_rounded),
             onTap: () {
               Navigator.pushReplacement(
-                  context, MaterialPageRoute(builder: (context) => SalesScreen(seller:widget.seller,user:widget.user)));
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SalesScreen(
+                          seller: widget.seller, user: widget.user)));
             }),
         ListTile(
             title: Text("Back to main"),
@@ -77,7 +85,7 @@ class _MySellerDrawerState extends State<MySellerDrawer> {
       ],
     ));
   }
-  
+
   void _backtomainDialog() {
     showDialog(
         builder: (context) => new AlertDialog(
@@ -91,25 +99,23 @@ class _MySellerDrawerState extends State<MySellerDrawer> {
                 ),
                 actions: <Widget>[
                   TextButton(
-                    child: Text("Yes", style: TextStyle(
-                              color: Colors.yellow[600])),
+                    child: Text("Yes",
+                        style: TextStyle(color: Colors.yellow[600])),
                     onPressed: () async {
-                       Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => MainScreen(user:widget.user
-                                ),
-                          ),
-                        );
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => MainScreen(user: widget.user),
+                        ),
+                      );
                     },
                   ),
                   TextButton(
-                     child: Text("No", style: TextStyle(
-                              color: Colors.yellow[600])),
+                      child: Text("No",
+                          style: TextStyle(color: Colors.yellow[600])),
                       onPressed: () {
                         Navigator.of(context).pop();
                       }),
                 ]),
         context: context);
   }
-
-} 
+}

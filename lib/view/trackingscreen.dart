@@ -7,7 +7,6 @@ import 'package:bunplanet/view/user.dart';
 import 'package:bunplanet/view/mainscreen.dart';
 import 'package:bunplanet/view/paymentlist.dart';
 
-
 class TrackingScreen extends StatefulWidget {
   final User user;
 
@@ -21,7 +20,6 @@ class _TrackingScreenState extends State<TrackingScreen> {
   String _titlecenter = "Opps! no oders, Order now!";
   List _cartList;
   double _totalprice = 0.0;
-
 
   @override
   void initState() {
@@ -113,7 +111,6 @@ class _TrackingScreenState extends State<TrackingScreen> {
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                            
                                                   Text(
                                                       _cartList[index]
                                                           ['productName'],
@@ -121,179 +118,180 @@ class _TrackingScreenState extends State<TrackingScreen> {
                                                           fontSize: 16,
                                                           fontWeight:
                                                               FontWeight.bold)),
-                                                              SizedBox(height: 5),
-                                                              Text("Orderid : " +
-                                                          _cartList[index]
-                                                              ['orderid']),
+                                                  SizedBox(height: 5),
+                                                  Text("Orderid : " +
+                                                      _cartList[index]
+                                                          ['orderid']),
                                                   SizedBox(height: 3),
                                                   Row(
                                                     mainAxisAlignment:
                                                         MainAxisAlignment.start,
                                                     children: [
-                                                      
                                                       Text("Quantity : " +
                                                           _cartList[index]
                                                               ['cartqty']),
-                                        
-                                                                                        
-                                                                                      
-                                                                                                    ],
-                                                                                                  ),
-                                                                                                  SizedBox(height:2 ),
-                                                                                                  Text("Status: Preparing..."),
-                                                                                                  
-                                                                                                   MaterialButton(
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(5)),
-                                                                      minWidth: 50,
-                                                                      height: 5,
-                                                                      child: Text('Order Received',
-                                                                          style: TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.normal)),
-                                                                      color: Colors.brown,
-                                                                      onPressed: () {
-                                                                        _receivedDialog(index);
-                                                                      },
-                                                                    ),
-                                                                                                ],
-                                                                                              ),
-                                                                                            ),
-                                                                                          ),
-                                                                                        ],
-                                                                                      )))));
-                                                                    }));
-                                                              })),
-                                                            Container(
-                                                                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
-                                                                child: Column(
-                                                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                                                  children: [
-                                                                    SizedBox(height: 2),
-                                                                    Divider(
-                                                                      color: Colors.black,
-                                                                      height: 1,
-                                                                      thickness: 1.0,
-                                                                    ),
-                                                                    MaterialButton(
-                                                                      shape: RoundedRectangleBorder(
-                                                                          borderRadius: BorderRadius.circular(5)),
-                                                                      minWidth: 50,
-                                                                      height: 35,
-                                                                      child: Text('All Order Received',
-                                                                          style: TextStyle(
-                                                                              color: Colors.white,
-                                                                              fontSize: 16,
-                                                                              fontWeight: FontWeight.normal)),
-                                                                      color: Colors.brown,
-                                                                      onPressed: () {
-                                                                        _orderReceivedDialog();
-                                                                      },
-                                                                    ),
-                                                                  ],
-                                                                )),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                    );
-                                                  }
-                                                
-                                                  _loadMyOrder() {
-                                                    http.post(
-                                                        Uri.parse("https://crimsonwebs.com/s271738/bunplanet/php/tracking.php"),
-                                                        body: {"email": widget.user.email}).then((response) {
-                                                      print(response.body);
-                                                      if (response.body == "nodata") {
-                                                        _titlecenter = "No item";
-                                                        _cartList = [];
-                                                        return;
-                                                      } else {
-                                                        var jsondata = json.decode(response.body);
-                                                        print(jsondata);
-                                                        _cartList = jsondata["cart"];
-                                                        _titlecenter = "";
-                                                        _totalprice = 0.0;
-                                                        for (int i = 0; i < _cartList.length; i++) {
-                                                          _totalprice = _totalprice +
-                                                              double.parse(_cartList[i]['price']) *
-                                                                  int.parse(_cartList[i]['cartqty']);
-                                                        }
-                                                      }
-                                                      setState(() {});
-                                                    });
-                                                  }
-                                                
-                                                  void _deleteOrder() {
-                                                    http.post(
-                                                        Uri.parse(
-                                                            "https://crimsonwebs.com/s271738/bunplanet/php/orderreceived.php"),
-                                                        body: {
-                                                          "email": widget.user.email,
-                                                          
-                                                        }).then((response) {
-                                                      print(response.body);
-                                                      if (response.body == "success") {
-                                                        Fluttertoast.showToast(
-                                                            msg: "Success",
-                                                            toastLength: Toast.LENGTH_SHORT,
-                                                            gravity: ToastGravity.CENTER,
-                                                            timeInSecForIosWeb: 1,
-                                                            backgroundColor: Colors.red,
-                                                            textColor: Colors.white,
-                                                            fontSize: 16.0);
-                                                        Navigator.pushReplacement(
-                                                            context,
-                                                            MaterialPageRoute(
-                                                                builder: (context) => TrackingScreen(
-                                                                      user: widget.user,
-                                                                    )));
-                                                        return;
-                                                      } else {
-                                                        Fluttertoast.showToast(
-                                                            msg: "Failed",
-                                                            toastLength: Toast.LENGTH_SHORT,
-                                                            gravity: ToastGravity.CENTER,
-                                                            timeInSecForIosWeb: 1,
-                                                            backgroundColor: Colors.red,
-                                                            textColor: Colors.white,
-                                                            fontSize: 16.0);
-                                                      }
-                                                    });
-                                                  }
-                                                
-                                                  void _orderReceivedDialog() {
-                                                    showDialog(
-                                                        builder: (context) => new AlertDialog(
-                                                                shape: RoundedRectangleBorder(
-                                                                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
-                                                                title: new Text(
-                                                                  'Order Received ?',
-                                                                  style: TextStyle(
-                                                                    color: Colors.black,
-                                                                  ),
-                                                                ),
-                                                                actions: <Widget>[
-                                                                  TextButton(
-                                                                    child: Text("Yes",
-                                                                        style: TextStyle(color: Colors.yellow[600])),
-                                                                    onPressed: () {
-                                                                      Navigator.of(context).pop();
-                                                                      _deleteOrder();
-                                                                    },
-                                                                  ),
-                                                                  TextButton(
-                                                                      child: Text("No",
-                                                                          style: TextStyle(color: Colors.yellow[600])),
-                                                                      onPressed: () {
-                                                                        Navigator.of(context).pop();
-                                                                      }),
-                                                                ]),
-                                                        context: context);
-                                                  }
-                                                
-                                                  _receivedDialog(int index) {
-                                                    showDialog(
+                                                    ],
+                                                  ),
+                                                  SizedBox(height: 2),
+                                                  Text("Status: Preparing..."),
+                                                  MaterialButton(
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        5)),
+                                                    minWidth: 50,
+                                                    height: 5,
+                                                    child: Text(
+                                                        'Order Received',
+                                                        style: TextStyle(
+                                                            color: Colors.white,
+                                                            fontSize: 16,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .normal)),
+                                                    color: Colors.brown,
+                                                    onPressed: () {
+                                                      _receivedDialog(index);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      )))));
+                    }));
+              })),
+            Container(
+                padding: EdgeInsets.fromLTRB(20, 5, 20, 5),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    SizedBox(height: 2),
+                    Divider(
+                      color: Colors.black,
+                      height: 1,
+                      thickness: 1.0,
+                    ),
+                    MaterialButton(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5)),
+                      minWidth: 50,
+                      height: 35,
+                      child: Text('All Order Received',
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.normal)),
+                      color: Colors.brown,
+                      onPressed: () {
+                        _orderReceivedDialog();
+                      },
+                    ),
+                  ],
+                )),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _loadMyOrder() {
+    http.post(
+        Uri.parse("https://crimsonwebs.com/s271738/bunplanet/php/tracking.php"),
+        body: {"email": widget.user.email}).then((response) {
+      print(response.body);
+      if (response.body == "nodata") {
+        _titlecenter = "No item";
+        _cartList = [];
+        return;
+      } else {
+        var jsondata = json.decode(response.body);
+        print(jsondata);
+        _cartList = jsondata["cart"];
+        _titlecenter = "";
+        _totalprice = 0.0;
+        for (int i = 0; i < _cartList.length; i++) {
+          _totalprice = _totalprice +
+              double.parse(_cartList[i]['price']) *
+                  int.parse(_cartList[i]['cartqty']);
+        }
+      }
+      setState(() {});
+    });
+  }
+
+  void _deleteOrder() {
+    http.post(
+        Uri.parse(
+            "https://crimsonwebs.com/s271738/bunplanet/php/orderreceived.php"),
+        body: {
+          "email": widget.user.email,
+        }).then((response) {
+      print(response.body);
+      if (response.body == "success") {
+        Fluttertoast.showToast(
+            msg: "Success",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => TrackingScreen(
+                      user: widget.user,
+                    )));
+        return;
+      } else {
+        Fluttertoast.showToast(
+            msg: "Failed",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.CENTER,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.red,
+            textColor: Colors.white,
+            fontSize: 16.0);
+      }
+    });
+  }
+
+  void _orderReceivedDialog() {
+    showDialog(
+        builder: (context) => new AlertDialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10.0))),
+                title: new Text(
+                  'Order Received ?',
+                  style: TextStyle(
+                    color: Colors.black,
+                  ),
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: Text("Yes",
+                        style: TextStyle(color: Colors.yellow[600])),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      _deleteOrder();
+                    },
+                  ),
+                  TextButton(
+                      child: Text("No",
+                          style: TextStyle(color: Colors.yellow[600])),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                ]),
+        context: context);
+  }
+
+  _receivedDialog(int index) {
+    showDialog(
         builder: (context) => new AlertDialog(
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -310,20 +308,20 @@ class _TrackingScreenState extends State<TrackingScreen> {
                     onPressed: () {
                       Navigator.of(context).pop();
                       _orderReceived(index);
-                                          },
-                                        ),
-                                        TextButton(
-                                            child: Text("No",
-                                                style: TextStyle(color: Colors.yellow[600])),
-                                            onPressed: () {
-                                              Navigator.of(context).pop();
-                                            }),
-                                      ]),
-                              context: context);
-                                                                        }
-                      
-                        void _orderReceived(int index) {
-                          http.post(
+                    },
+                  ),
+                  TextButton(
+                      child: Text("No",
+                          style: TextStyle(color: Colors.yellow[600])),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      }),
+                ]),
+        context: context);
+  }
+
+  void _orderReceived(int index) {
+    http.post(
         Uri.parse(
             "https://crimsonwebs.com/s271738/bunplanet/php/receiveoneorder.php"),
         body: {
@@ -359,4 +357,4 @@ class _TrackingScreenState extends State<TrackingScreen> {
       }
     });
   }
-                        }
+}

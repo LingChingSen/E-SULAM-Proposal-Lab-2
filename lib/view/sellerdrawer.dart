@@ -24,7 +24,7 @@ class _MySellerDrawerState extends State<MySellerDrawer> {
         child: ListView(
       children: [
         UserAccountsDrawerHeader(
-         
+          accountEmail: Text(widget.seller.email),
           currentAccountPicture: CircleAvatar(
             backgroundColor:
                 Theme.of(context).platform == TargetPlatform.android

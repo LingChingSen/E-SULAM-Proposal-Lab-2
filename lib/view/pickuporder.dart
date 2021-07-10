@@ -105,7 +105,8 @@ class _Order2ScreenState extends State<Order2Screen> {
                                                           textAlign: TextAlign
                                                               .left,
                                                           style: TextStyle(
-                                                              fontWeight:
+                                                              color: Colors
+                                                                    .blue[600],fontWeight:
                                                                   FontWeight
                                                                       .bold,
                                                               fontSize: 15)),
@@ -130,10 +131,12 @@ class _Order2ScreenState extends State<Order2Screen> {
                                                         "Quantity: " +
                                                             _productList[index]
                                                                 ['cartqty'],
-                                                        style: TextStyle(
-                                                            fontSize: 13),
+                                                       style: TextStyle(
+                                                                color: Colors
+                                                                    .green[600],
+                                                                fontSize: 12)),
                                                       ),
-                                                    ),
+                                                    
                                                     Padding(
                                                       padding: const EdgeInsets
                                                               .fromLTRB(
@@ -143,9 +146,11 @@ class _Order2ScreenState extends State<Order2Screen> {
                                                             _productList[index]
                                                                 ['pickuptime'],
                                                         style: TextStyle(
-                                                            fontSize: 13),
+                                                                color: Colors
+                                                                    .orange[600],
+                                                                fontSize: 12)),
                                                       ),
-                                                    ),
+                                                    
                                                   ])
                                             ],
                                           )),

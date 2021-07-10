@@ -321,10 +321,13 @@ class _TrackingScreenState extends State<TrackingScreen> {
   }
 
   void _orderReceived(int index) {
+    String orderid = _cartList[index]['orderid'];
+    
     http.post(
         Uri.parse(
             "https://crimsonwebs.com/s271738/bunplanet/php/receiveoneorder.php"),
         body: {
+          "orderid": orderid,
           "email": widget.user.email,
           "prid": _cartList[index]['productId'],
         }).then((response) {

@@ -195,7 +195,7 @@ class _SellerScreenState extends State<SellerScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(context,
-              MaterialPageRoute(builder: (context) => AddNewProduct(user:widget.user)));
+              MaterialPageRoute(builder: (context) => AddNewProduct(seller: widget.seller, user: widget.user)));
         },
         child: Icon(Icons.add),
       ),
